@@ -16,6 +16,7 @@ class App extends React.Component {
   search (term) {
     console.log(`${term} was searched`);
     // TODO
+    //handle ajax request here
   }
 
   render () {
