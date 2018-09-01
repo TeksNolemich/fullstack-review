@@ -16,14 +16,43 @@ class App extends React.Component {
   search (term) {
     console.log(`${term} was searched`);
     // TODO
-    //handle ajax request here
+    $.ajax({
+      method: "POST",
+      url: "http://localhost:1128/repos",
+      data: JSON.stringify({username: term}),
+      contentType: "application/json",
+      success: function(data) {
+        console.log(data, ' sucessful post request to home server');
+      },
+      error: function(data) {
+        console.log(data);
+      }
+    })
   }
+
+  componentDidMount() {
+    const context = this;
+    $.ajax({
+      method: "GET",
+      url: "http://localhost:1128/repos",
+      success: function(data) {
+        console.log(data, ' sucessful post request to home server');
+        context.setState({repos: data});
+
+      },
+      error: function(data) {
+        console.log(data);
+      }
+    })
+  }
+
 
   render () {
     return (<div>
       <h1>Github Fetcher</h1>
-      <RepoList repos={this.state.repos}/>
       <Search onSearch={this.search.bind(this)}/>
+      <br></br>
+      <RepoList repos={this.state.repos}/>
     </div>)
   }
 }
