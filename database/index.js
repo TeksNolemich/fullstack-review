@@ -3,29 +3,29 @@ mongoose.connect('mongodb://student:student1@ds137862.mlab.com:37862/github');
 
 let repoSchema = mongoose.Schema({
   id: {type:Number, unique:true},
-  name: {type:String, index:{unique: true}},
-  size: {type:Number, index:{unique: true}},
-  watchers: {type:Number, index:{unique: true}}
+  name: {type:String},
+  size: {type:Number},
+  watchers: {type:Number}
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (repoArr) => {
-  // TODO: Your code here
-  let Repo = new Repo;
-  Repo.insertMany(repoArr, (err) => {
-    if (err) return handleError(err);
+let save = (repoArr, done) => {
+  var saved = Repo.insertMany(repoArr, (err) => {
+    if (err) {
+      console.log('err ', err)
+    };
   });
+  // saved.exec(callback);
+  if (saved) {
+    done();
+  }
 }
 
 let top = (callback) => {
-  Repo.find({}, (err, query) => {
-    if (err) {
-      callback(err)
-    } else {
-      callback(null, query);
-    }
-  });
+  var query = Repo.find();
+  query.sort({ watchers: 1 }).limit(25);
+  query.exec(callback);
 }
 
 
